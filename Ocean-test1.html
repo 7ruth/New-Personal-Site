@@ -65,6 +65,7 @@
 		<script src="js/stats.min.js"></script>
 		<script src="js/controls/PointerLockControls.js"></script>
 		<script src="js/Projector.js"></script>
+		<script src="js/three-text2d.min.js"></script>
 		<script>
 			if ( ! Detector.webgl ) {
 				Detector.addGetWebGLMessage();
@@ -85,6 +86,20 @@
 				param: 4,
 				filterparam: 1
 			};
+			var linksObject = {
+				TicTacToe: "http://7ruth.github.io/tic_tac_toe/",
+				Project1: "https://7ruth.github.io/arithmeticGame/",
+				Project2: "https://padstats.herokuapp.com/",
+				Project3: "http://7ruth.github.io/autograph/#/",
+				Project4: "http://7ruth.github.io/PadStatsReactJS/",
+				LinkedIn: "https://www.linkedin.com/in/martinterskin",
+				GitHub: "https://github.com/7ruth",
+				Twitter: "https://twitter.com/RUEXPed",
+				Home: "http://martintersk.in"
+			};
+			var linkHeight=50;
+			var SpriteText2D = THREE_Text.SpriteText2D;
+			var textAlign = THREE_Text.textAlign;
 			var waterNormals;
 			var blocker = document.getElementById( 'blocker' );
 			var instructions = document.getElementById( 'instructions' );
@@ -170,17 +185,8 @@
 
 			var prevTime = performance.now();
 			var velocity = new THREE.Vector3();
-			var linksObject = {
-				TicTacToe: "http://7ruth.github.io/tic_tac_toe/"
-				Project1: "https://7ruth.github.io/arithmeticGame/",
-				Project2: "https://padstats.herokuapp.com/",
-				Project3: "http://7ruth.github.io/autograph/#/",
-				Project4: "http://7ruth.github.io/PadStatsReactJS/",
-				LinkedIn: "https://www.linkedin.com/in/martinterskin",
-				GitHub: "https://github.com/7ruth",
-				Twitter: "https://twitter.com/RUEXPed",
-				Home: "http://martintersk.in"
-			}
+
+
 
 			function init() {
 
@@ -315,7 +321,7 @@
 
 					var mesh = new THREE.Mesh( geometry, material );
 					mesh.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-					mesh.position.y = Math.floor( Math.random() * 100 ) * 20 + 10;
+					mesh.position.y = Math.floor( Math.random() * (Object.keys(linksObject).length * 25) ) * 20 + 10;
 					mesh.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
 					scene.add( mesh );
 
@@ -415,13 +421,21 @@
 				scene.add( skyBox );
 
 				for (var i=0; i<Object.keys(linksObject).length; i++){
+					linkHeight += 500;
 					geometry = new THREE.BoxGeometry( 5, 5, 5 );
 					material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
 		      var cube = new THREE.Mesh( geometry, material );
 		      cube.userData = { URL: linksObject[Object.keys(linksObject)[i]]};
-					cube.position.set(0,300, 0)
+					cube.position.set(0,linkHeight, 0)
 		      objects.push(cube);
 					scene.add( cube );
+
+					var sprite = new SpriteText2D(Object.keys(linksObject)[i], { align: textAlign.center, font: '30px Arial', fillStyle: '#31b503', antialias: true })
+					sprite.position.set(0, linkHeight + 30 , 0)
+					sprite.scale.set(1, 1, 1)
+					sprite.material.alphaTest = 0.1
+					objects.push(sprite);
+					scene.add(sprite)
 				}
 
 			}
@@ -452,7 +466,7 @@
 					var delta = ( time - prevTime ) / 1000;
 					velocity.x -= velocity.x * 10.0 * delta;
 					velocity.z -= velocity.z * 10.0 * delta;
-					velocity.y -= 9.8 * 50.0 * delta; // 100.0 = mass
+					velocity.y -= 9.8 * 10.0 * delta; // 100.0 = mass
 					if ( moveForward ) velocity.z -= 400.0 * delta;
 					if ( moveBackward ) velocity.z += 400.0 * delta;
 					if ( moveLeft ) velocity.x -= 400.0 * delta;
