@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <title>css3d - device orientation - augmented interface</title>
+		<style>
+			body {
+					background-color: #000000;
+					margin: 0;
+					cursor: move;
+					overflow: hidden;
+					font-family: helvetica, arial, sans-serif;
+			}
+			.menu {
+					cursor: pointer;
+			}
+			.pic{
+					width: 300px;
+					height: 240px;
+			}
+		</style>
+    </head>
+    <body>
+
+        <script src="js/old/three.min.js"></script>
+        <script src="js/DeviceOrientationControls.js"></script>
+        <script src="js/CSS3DRenderer.js"></script>
+        <script>
+            var camera, scene, renderer;
+            var circle1, circle2;
+
+            function init() {
+                camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+                controls = new THREE.DeviceOrientationControls( camera );
+                scene = new THREE.Scene();
+                var sides = [{
+                        url: '../textures/cube/skybox/px.jpg',
+                        position: [ -1024, 0, 0 ],
+                        rotation: [ 0, Math.PI / 2, 0 ]
+                    },{
+                        url: '../textures/cube/skybox/nx.jpg',
+                        position: [ 1024, 0, 0 ],
+                        rotation: [ 0, -Math.PI / 2, 0 ]
+                    },{
+                        url: '../textures/cube/skybox/py.jpg',
+                        position: [ 0,  1024, 0 ],
+                        rotation: [ Math.PI / 2, 0, Math.PI ]
+                    },{
+                        url: '../textures/cube/skybox/ny.jpg',
+                        position: [ 0, -1024, 0 ],
+                        rotation: [ - Math.PI / 2, 0, Math.PI ]
+                    },{
+                        url: '../textures/cube/skybox/pz.jpg',
+                        position: [ 0, 0,  1024 ],
+                        rotation: [ 0, Math.PI, 0 ]
+                    },{
+                        url: '../textures/cube/skybox/nz.jpg',
+                        position: [ 0, 0, -1024 ],
+                        rotation: [ 0, 0, 0 ]
+                    }];
+
+                var cube = new THREE.Object3D();
+                scene.add( cube );
+                for ( var i = 0; i < sides.length; i ++ ) {
+
+                    var side = sides[ i ];
+                    var element = document.createElement( 'img' );
+                    element.width = 2050;
+                    element.src = side.url;
+                    var object = new THREE.CSS3DObject( element );
+                    object.position.fromArray( side.position );
+                    object.rotation.fromArray( side.rotation );
+                    cube.add( object );
+
+                }
+                ///////Set links
+                var menu = [
+                    { img: 'img/resume.png' },
+                    { img: 'img/linkedin.png' },
+                    { img: 'img/2.png' },
+                    { img: 'img/3.png' },
+                    { img: 'img/4.png' }
+                ];
+
+								var linksObject = {
+									Resume: "http://martintersk.in/resume.pdf",
+									LinkedIn: "https://www.linkedin.com/in/martinterskin",
+									GitHub: "https://github.com/7ruth",
+									Twitter: "https://twitter.com/RUEXPed",
+									Project1: "https://7ruth.github.io/arithmeticGame/",
+									Project2: "https://padstats.herokuapp.com/",
+									Project3: "http://7ruth.github.io/autograph/#/",
+									Project4: "http://7ruth.github.io/PadStatsReactJS/"
+								};
+
+                var vector = new THREE.Vector3();
+                for ( var i = 0; i < menu.length; i ++ ) {
+                    var myMenu = menu[ i ];
+                    var pic = document.createElement( 'div' );
+                    console.log(myMenu.img);
+                    pic.innerHTML = '<img id="' + i + '" class="pic" src=' + myMenu.img + ' >';
+
+                    pic.addEventListener( 'click', function ( event ) {
+                        // console.log(event.target.id);
+                        window.open("www.stackoverflow.com");
+                    }, false );
+
+                    var object = new THREE.CSS3DObject( pic );
+                    var phi = (Math.PI*2) / menu.length;
+                    phi = phi * i;
+
+                    object.position.x = 350 * Math.sin( phi );
+                    object.position.y = 40;
+                    object.position.z = 350 * Math.cos( phi );
+
+                    vector.x = object.position.x / 2;
+                    vector.y = object.position.y;
+                    vector.z = object.position.z / 2;
+
+                    object.lookAt( vector );
+                    scene.add( object );
+                }
+
+
+
+                renderer = new THREE.CSS3DRenderer();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                document.body.appendChild( renderer.domElement );
+
+                window.addEventListener( 'resize', onWindowResize, false );
+                animate();
+            }
+
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+            }
+
+            function animate() {
+                requestAnimationFrame( animate );
+                controls.update();
+                renderer.render( scene, camera );
+            }
+
+            init();
+
+        </script>
+    </body>
+</html>
