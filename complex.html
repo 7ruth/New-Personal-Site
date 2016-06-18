@@ -436,13 +436,13 @@
 				var cube = new THREE.Mesh( geometry, material );
 				cube.userData = { mass: 30};
 				var y = 20
-				var x = 1000
-				var z = -1000
+				var x = 200
+				var z = -200
 				cube.position.set(x,y,z)
 				objects.push(cube);
 				scene.add( cube );
 
-				sprite = new SpriteText2D("Drink Me", { align: textAlign.center, font: '30px Arial', fillStyle: '#63db9a', antialias: true })
+				sprite = new SpriteText2D("More You Click Lighter You Get", { align: textAlign.center, font: '30px Arial', fillStyle: '#63db9a', antialias: true })
 				sprite.position.set(x,y+30,z)
 				sprite.scale.set(.5, .5, .5)
 				sprite.material.alphaTest = 0.1

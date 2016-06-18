@@ -19,6 +19,10 @@
 					width: 300px;
 					height: 240px;
 			}
+			p {
+				z-index:100;
+				font-size: 40px;
+			}
 		</style>
     </head>
     <body>
@@ -26,36 +30,41 @@
         <script src="js/old/three.min.js"></script>
         <script src="js/DeviceOrientationControls.js"></script>
         <script src="js/CSS3DRenderer.js"></script>
+				<script src="js/controls/TrackballControls.js"></script>
         <script>
             var camera, scene, renderer;
             var circle1, circle2;
 
             function init() {
                 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-                controls = new THREE.DeviceOrientationControls( camera );
+                // controls = new THREE.DeviceOrientationControls( camera );
+								controls = new THREE.TrackballControls( camera );
+
+
+
                 scene = new THREE.Scene();
                 var sides = [{
-                        url: '../textures/cube/skybox/px.jpg',
+                        url: 'textures/cube/skybox/px.jpg',
                         position: [ -1024, 0, 0 ],
                         rotation: [ 0, Math.PI / 2, 0 ]
                     },{
-                        url: '../textures/cube/skybox/nx.jpg',
+                        url: 'textures/cube/skybox/nx.jpg',
                         position: [ 1024, 0, 0 ],
                         rotation: [ 0, -Math.PI / 2, 0 ]
                     },{
-                        url: '../textures/cube/skybox/py.jpg',
+                        url: 'textures/cube/skybox/py.jpg',
                         position: [ 0,  1024, 0 ],
                         rotation: [ Math.PI / 2, 0, Math.PI ]
                     },{
-                        url: '../textures/cube/skybox/ny.jpg',
+                        url: 'textures/cube/skybox/ny.jpg',
                         position: [ 0, -1024, 0 ],
                         rotation: [ - Math.PI / 2, 0, Math.PI ]
                     },{
-                        url: '../textures/cube/skybox/pz.jpg',
+                        url: 'textures/cube/skybox/pz.jpg',
                         position: [ 0, 0,  1024 ],
                         rotation: [ 0, Math.PI, 0 ]
                     },{
-                        url: '../textures/cube/skybox/nz.jpg',
+                        url: 'textures/cube/skybox/nz.jpg',
                         position: [ 0, 0, -1024 ],
                         rotation: [ 0, 0, 0 ]
                     }];
@@ -82,28 +91,29 @@
                     { img: 'img/3.png' },
                     { img: 'img/4.png' }
                 ];
-
+								// LinksObject cheat sheet:
+								//What: ["tag line", "link on click", "image to render", position on the page]
 								var linksObject = {
-									Resume: "http://martintersk.in/resume.pdf",
-									LinkedIn: "https://www.linkedin.com/in/martinterskin",
-									GitHub: "https://github.com/7ruth",
-									Twitter: "https://twitter.com/RUEXPed",
-									Project1: "https://7ruth.github.io/arithmeticGame/",
-									Project2: "https://padstats.herokuapp.com/",
-									Project3: "http://7ruth.github.io/autograph/#/",
-									Project4: "http://7ruth.github.io/PadStatsReactJS/"
+									Resume: ['Resume', 'http://martintersk.in/resume.pdf', 'img/resume.png', 'up'],
+									LinkedIn: ['LinkedIn', 'https://www.linkedin.com/in/martinterskin', 'img/linkedin.png', 'down'],
+									GitHub: ['GitHub', 'https://github.com/7ruth', 'img/2.png', 'down'],
+									Twitter: ['Twitter', 'https://twitter.com/RUEXPed', 'img/2.png', 'down'],
+									Project1: ['Algebraic! - Project in JS', 'https://7ruth.github.io/arithmeticGame/', 'img/2.png', 'side'],
+									Project2: ['PadStats - Project in Ruby on Rails', 'https://padstats.herokuapp.com/', 'img/2.png', 'side'],
+									Project3: ['AutoGraph - AngularJS with Ruby on Rails', 'http://7ruth.github.io/autograph/#/', 'img/2.png', 'side'],
+									Project4: ['PadStats - Project in ReactJS', 'http://7ruth.github.io/PadStatsReactJS/', 'img/2.png', 'side']
 								};
 
                 var vector = new THREE.Vector3();
-                for ( var i = 0; i < menu.length; i ++ ) {
-                    var myMenu = menu[ i ];
+                for ( var i = 0; i < Object.keys(linksObject).length; i ++ ) {
+                    // var myMenu = menu[ i ];
                     var pic = document.createElement( 'div' );
-                    console.log(myMenu.img);
-                    pic.innerHTML = '<img id="' + i + '" class="pic" src=' + myMenu.img + ' >';
+										pic.id = i;
+                    pic.innerHTML = '<img class="pic" src=' + linksObject[Object.keys(linksObject)[i]][2] + ' ><p>'+linksObject[Object.keys(linksObject)[i]][0]+'</p>';
 
                     pic.addEventListener( 'click', function ( event ) {
-                        // console.log(event.target.id);
-                        window.open("www.stackoverflow.com");
+												console.log(this.id);
+												window.open(linksObject[Object.keys(linksObject)[this.id]][1]);
                     }, false );
 
                     var object = new THREE.CSS3DObject( pic );
