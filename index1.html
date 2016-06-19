@@ -3,14 +3,6 @@
 	<head>
 		<title>Martin Terskin - Personal Site - Complex</title>
 		<meta charset="utf-8">
-
-		<script>
-		var mobile = (/iphone|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
-		if (mobile) {
-			window.location.replace("http://martintersk.in/simple.html");
-		}
-		</script>
-
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<!-- jQuery -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
@@ -37,7 +29,12 @@
     <div id="container">
       <div id="title">Martin Terskin - Personal Site</div>
       <p>Make a choice...</p>
-      <p><a href="http://martintersk.in/simple.html">Text-Only</a> || <a href="http://martintersk.in/complex.html">Interactive</a>
+      <p><a href='http://martintersk.in/simple.html'>Text-Only</a> || <a id='interactiveLink' href='http://martintersk.in/complex.html'>Interactive</a>
     <div>
-
+		<script>
+		var mobile = (/iphone|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
+		if (mobile) {
+			document.getElementById("interactiveLink").href='http://martintersk.in/complexMobile.html';
+		}
+		</script>
   </body>
