@@ -21,7 +21,12 @@
 			}
 			p {
 				z-index:100;
-				font-size: 40px;
+			  color: white;
+				font-size: 50px;
+				text-align: center;
+				-webkit-text-stroke-width: 1px;
+		    -webkit-text-stroke-color: black;
+				margin:0;
 			}
 		</style>
     </head>
@@ -37,10 +42,8 @@
 
             function init() {
                 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-                // controls = new THREE.DeviceOrientationControls( camera );
-								controls = new THREE.TrackballControls( camera );
-
-
+                controls = new THREE.DeviceOrientationControls( camera );
+								//controls = new THREE.TrackballControls( camera );
 
                 scene = new THREE.Scene();
                 var sides = [{
@@ -81,48 +84,72 @@
                     object.position.fromArray( side.position );
                     object.rotation.fromArray( side.rotation );
                     cube.add( object );
-
                 }
-                ///////Set links
-                var menu = [
-                    { img: 'img/resume.png' },
-                    { img: 'img/linkedin.png' },
-                    { img: 'img/2.png' },
-                    { img: 'img/3.png' },
-                    { img: 'img/4.png' }
-                ];
 								// LinksObject cheat sheet:
 								//What: ["tag line", "link on click", "image to render", position on the page]
 								var linksObject = {
 									Resume: ['Resume', 'http://martintersk.in/resume.pdf', 'img/resume.png', 'up'],
 									LinkedIn: ['LinkedIn', 'https://www.linkedin.com/in/martinterskin', 'img/linkedin.png', 'down'],
-									GitHub: ['GitHub', 'https://github.com/7ruth', 'img/2.png', 'down'],
-									Twitter: ['Twitter', 'https://twitter.com/RUEXPed', 'img/2.png', 'down'],
-									Project1: ['Algebraic! - Project in JS', 'https://7ruth.github.io/arithmeticGame/', 'img/2.png', 'side'],
-									Project2: ['PadStats - Project in Ruby on Rails', 'https://padstats.herokuapp.com/', 'img/2.png', 'side'],
-									Project3: ['AutoGraph - AngularJS with Ruby on Rails', 'http://7ruth.github.io/autograph/#/', 'img/2.png', 'side'],
-									Project4: ['PadStats - Project in ReactJS', 'http://7ruth.github.io/PadStatsReactJS/', 'img/2.png', 'side']
+									GitHub: ['GitHub', 'http://github.com/7ruth', 'img/GitHub-Mark.gif', 'down'],
+									Twitter: ['Twitter', 'https://twitter.com/RUEXPed', 'img/twitter.png', 'down'],
+									Intro: ['Martin Terskin', 'http://martintersk.in', 'img/MartinTerskin.png', 'side'],
+									Project1: ['Algebraic! - Project in JS', 'https://7ruth.github.io/arithmeticGame/', 'img/finn.gif', 'side'],
+									Project2: ['PadStats - Project in Ruby on Rails', 'https://padstats.herokuapp.com/', 'img/padStatsRuby.png', 'side'],
+									Project3: ['AutoGraph - AngularJS with Ruby on Rails', 'http://7ruth.github.io/autograph/#/', 'img/Gmaps.jpg', 'side'],
+									Project4: ['PadStats - Project in ReactJS', 'http://7ruth.github.io/PadStatsReactJS/', 'img/padStatsReactJS.png', 'side']
 								};
-
+								var lengthObject = {'side':0,'down':0,'up':0};
+								//count how many objects of each type (side, down, up)
+								for ( var i = 0; i < Object.keys(linksObject).length; i ++ ) {
+									switch(linksObject[Object.keys(linksObject)[i]][3]){
+										case 'side':
+											lengthObject['side'] += 1
+										break;
+										case 'down':
+											lengthObject['down'] += 1
+										break;
+										case 'up':
+											lengthObject['up'] += 1
+										break;
+									}
+									console.log(i);
+									console.log(lengthObject);
+								}
+								// create vector
                 var vector = new THREE.Vector3();
+								// slot positioning for content divs (helps position with x=0 being the center)
+								var sideSlots = [6,7,3,4,5];
+								var sideDenominator = lengthObject['side'] * 2;
+								var downSlots = [6,4,5];
+								//loop to create divs with content on the scene
                 for ( var i = 0; i < Object.keys(linksObject).length; i ++ ) {
-                    // var myMenu = menu[ i ];
-                    var pic = document.createElement( 'div' );
-										pic.id = i;
-                    pic.innerHTML = '<img class="pic" src=' + linksObject[Object.keys(linksObject)[i]][2] + ' ><p>'+linksObject[Object.keys(linksObject)[i]][0]+'</p>';
+									var pic = document.createElement( 'div' );
+									pic.id = i;
+                  pic.innerHTML = '<img class="pic" src=' + linksObject[Object.keys(linksObject)[i]][2] + ' ><p>'+linksObject[Object.keys(linksObject)[i]][0]+'</p>';
+									//add event listener to each div
+                  pic.addEventListener( 'click', function ( event ) {
+											console.log(this.id);
+											window.open(linksObject[Object.keys(linksObject)[this.id]][1]);
+                  }, false );
+									//create new threeJS object that will hold the pic div
+                  var object = new THREE.CSS3DObject( pic );
+									// begin swith casing for div positions
+									switch (linksObject[Object.keys(linksObject)[i]][3]) {
+									case 'side':
+										console.log(linksObject[Object.keys(linksObject)[i]][0]);
+										//
+										var phi = (Math.PI*2) / sideDenominator;
+										lengthObject['side'] -=1
+										console.log(lengthObject['side']);
+										phi = phi * sideSlots[lengthObject['side']]
 
-                    pic.addEventListener( 'click', function ( event ) {
-												console.log(this.id);
-												window.open(linksObject[Object.keys(linksObject)[this.id]][1]);
-                    }, false );
-
-                    var object = new THREE.CSS3DObject( pic );
-                    var phi = (Math.PI*2) / menu.length;
-                    phi = phi * i;
-
-                    object.position.x = 350 * Math.sin( phi );
+										console.log(phi);
+										//positioning specs
+                    object.position.x = 1000 * Math.sin( phi );
                     object.position.y = 40;
-                    object.position.z = 350 * Math.cos( phi );
+                    object.position.z = 1000 * Math.cos( phi );
+
+										console.log("x "+object.position.x+ " y "+object.position.y+ " z "+object.position.z)
 
                     vector.x = object.position.x / 2;
                     vector.y = object.position.y;
@@ -130,9 +157,32 @@
 
                     object.lookAt( vector );
                     scene.add( object );
-                }
-
-
+									break;
+									case 'up':
+									//
+										var phi = (Math.PI*2) / sideDenominator;
+										phi = phi * 5;
+										object.position.x = 1000 * Math.sin( phi );
+										object.position.y = 800;
+										object.position.z = 1000 * Math.cos( phi );
+										scene.add( object );
+									break;
+									case 'down':
+									//
+										var phi = (Math.PI*2) / sideDenominator;
+										lengthObject['down'] -=1
+										phi = phi * downSlots[lengthObject['down']];
+										object.position.x = 1000 * Math.sin( phi );
+										object.position.y = -800;
+										object.position.z = 1000 * Math.cos( phi );
+										vector.x = object.position.x / 2;
+										vector.y = object.position.y;
+										vector.z = object.position.z / 2;
+										object.lookAt( vector );
+										scene.add( object );
+									break;
+              }
+						}
 
                 renderer = new THREE.CSS3DRenderer();
                 renderer.setSize( window.innerWidth, window.innerHeight );
